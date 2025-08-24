@@ -1,0 +1,46 @@
+[
+  {
+    "id": "L1",
+    "title": "Gift Card Steam R$50",
+    "category": "Gift Cards",
+    "price": 50.0,
+    "vendorId": "V1",
+    "vendorName": "Loja Alpha",
+    "featured": true,
+    "pop": 42,
+    "description": "Código digital BR"
+  },
+  {
+    "id": "L2",
+    "title": "Conta Valorant — Imortal",
+    "category": "Contas",
+    "price": 299.9,
+    "vendorId": "V2",
+    "vendorName": "PlayerX",
+    "featured": true,
+    "pop": 80,
+    "description": "Conta verificada, acesso imediato"
+  },
+  {
+    "id": "L3",
+    "title": "Gold World of Warcraft 100k",
+    "category": "Gold",
+    "price": 120.0,
+    "vendorId": "V3",
+    "vendorName": "FarmPro",
+    "featured": false,
+    "pop": 60,
+    "description": "Entrega rápida"
+  },
+  {
+    "id": "L4",
+    "title": "Skin CS2 — Faca",
+    "category": "Itens",
+    "price": 459.0,
+    "vendorId": "V4",
+    "vendorName": "SkinsBR",
+    "featured": false,
+    "pop": 100,
+    "description": "Item raro"
+  }
+]

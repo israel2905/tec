@@ -1,0 +1,29 @@
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Categorias — TEC Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="header"><div class="container header__inner">
+<a href="index.html" class="brand"><img src="assets/logo-tec.svg" width="160"></a>
+<nav class="nav"><a href="como-funciona.html">Como funciona</a><a href="anunciar.html" class="btn">Anunciar</a></nav>
+</div></header>
+<main class="section"><div class="container">
+<header class="section__head"><h1>Categorias</h1><form id="searchForm"><input id="q" placeholder="Buscar anúncios..."></form></header>
+<div id="list" class="grid products"></div>
+</div></main>
+<script>
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+async function load(){
+  const params=new URLSearchParams(location.search);
+  const c=params.get('c')||''; const q=params.get('q')||'';
+  const r=await fetch('/api/listings?category='+encodeURIComponent(c)+'&q='+encodeURIComponent(q)); const data=await r.json();
+  document.getElementById('list').innerHTML = data.items.map(it=>`
+    <article class="card"><div class="badge">${it.category}</div><h3>${it.title}</h3>
+    <div class="muted">${it.vendorName||'Vendedor'}</div><div class="price">${money(it.price)}</div>
+    <a class="btn" href="produto.html?id=${it.id}">Ver</a></article>`).join('');
+}
+document.getElementById('searchForm').addEventListener('submit',e=>{e.preventDefault(); const q=document.getElementById('q').value; location.href='categorias.html?q='+encodeURIComponent(q)});
+document.addEventListener('DOMContentLoaded', load);
+</script>
+</body></html>

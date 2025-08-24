@@ -1,0 +1,69 @@
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout — TEC Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="header"><div class="container header__inner">
+  <a href="index.html" class="brand"><img src="assets/logo-tec.svg" width="160"></a>
+  <nav class="nav"><a href="categorias.html">Categorias</a></nav>
+</div></header>
+<main class="section"><div class="container">
+  <h1>Checkout</h1>
+  <div id="cart"></div>
+  <div class="grid" style="margin-top:12px">
+    <label>E-mail de entrega<input id="email" type="email" placeholder="voce@email.com"></label>
+    <label>Nome (opcional)<input id="name" placeholder="Seu nome"></label>
+  </div>
+  <div class="grid" style="margin-top:12px">
+    <button class="btn" id="stripe">Pagar com Stripe</button>
+    <button class="btn" id="mp">Pagar com Mercado Pago</button>
+    <button class="btn" id="ps">Pagar com PagSeguro</button>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>Pix (BR Code)</h3>
+    <label>Chave Pix <input id="pix-key"></label>
+    <label>Nome recebedor <input id="pix-name"></label>
+    <label>Cidade (MAIÚSCULAS) <input id="pix-city"></label>
+    <button class="btn" id="pix">Gerar QR Pix</button>
+    <div id="pix-area" style="margin-top:8px"></div>
+  </div>
+</div></main>
+<script>
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+let items = JSON.parse(localStorage.getItem('tec_cart')||'[]');
+function drawCart(){
+  if(!items.length){ document.getElementById('cart').innerHTML='<p class="muted">Carrinho vazio.</p>'; return 0; }
+  let s=0; const rows=items.map(it=>{ const t=it.price*it.qty; s+=t; return `<tr><td>${it.title}</td><td>${it.qty}</td><td>${money(it.price)}</td><td>${money(t)}</td></tr>`; }).join('');
+  document.getElementById('cart').innerHTML = `<table class="table"><thead><tr><th>Produto</th><th>Qtd</th><th>Preço</th><th>Total</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><th colspan="3" style="text-align:right">Subtotal</th><th>${money(s)}</th></tr></tfoot></table>`;
+  return s;
+}
+function emvField(id,val){const len=String(val.length).padStart(2,'0');return id+len+val}
+function crc16(p){let c=0xFFFF;for(let i=0;i<p.length;i++){c^=p.charCodeAt(i)<<8;for(let j=0;j<8;j++){c=(c&0x8000)?((c<<1)^0x1021):(c<<1);c&=0xFFFF}}return c.toString(16).toUpperCase().padStart(4,'0')}
+function buildPix({pixKey,merchantName,merchantCity,amount,txid,description}){
+ const gui=emvField('00','br.gov.bcb.pix'); const acc=gui+emvField('01',pixKey)+(description?emvField('02',description.slice(0,50)):'');
+ const mai=emvField('26',acc);
+ const payload=emvField('00','01')+emvField('01','11')+mai+emvField('52','0000')+emvField('53','986')+(amount?emvField('54',String(amount.toFixed(2))):'')+emvField('58','BR')+emvField('59',merchantName.slice(0,25))+emvField('60',merchantCity.slice(0,15))+emvField('62',emvField('05',txid.slice(0,25)))+'6304';
+ return payload+crc16(payload);
+}
+async function cfg(){ const r=await fetch('/api/config'); return r.json(); }
+async function createOrder(){
+  const email=document.getElementById('email').value.trim(); const name=document.getElementById('name').value.trim();
+  if(!email){ alert('Informe seu e-mail'); return null; }
+  const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,name,items})}); const data=await res.json();
+  return data.orderId;
+}
+document.addEventListener('DOMContentLoaded',async()=>{
+  const total=drawCart();
+  const c = await cfg();
+  document.getElementById('pix-key').value = c.pixKey||'';
+  document.getElementById('pix-name').value = c.pixName||'';
+  document.getElementById('pix-city').value = c.pixCity||'';
+
+  document.getElementById('stripe').onclick=async()=>{ const id=await createOrder(); if(!id) return; const r=await fetch('/api/create-checkout-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:id})}); const d=await r.json(); if(d.url) location=d.url; };
+  document.getElementById('mp').onclick=async()=>{ const id=await createOrder(); if(!id) return; const r=await fetch('/api/mp/create-preference',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:id})}); const d=await r.json(); if(d.init_point) location=d.init_point; };
+  document.getElementById('ps').onclick=async()=>{ const id=await createOrder(); if(!id) return; const r=await fetch('/api/pagseguro/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:id})}); const d=await r.json(); if(d.checkout_url) location=d.checkout_url; };
+  document.getElementById('pix').onclick=async()=>{ const id=await createOrder(); if(!id) return; const key=document.getElementById('pix-key').value.trim(); const name=document.getElementById('pix-name').value.trim()||'TEC GAMES'; const city=document.getElementById('pix-city').value.trim().toUpperCase()||'BRASIL'; const br=buildPix({pixKey:key,merchantName:name,merchantCity:city,amount:total,txid:id,description:'Pedido '+id}); const url='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(br); document.getElementById('pix-area').innerHTML='<p><strong>Código Pix:</strong></p><textarea readonly rows="4" style="width:100%">'+br+'</textarea><p>Ou escaneie:</p><img alt="QR Pix" src="'+url+'">'; };
+});
+</script>
+</body></html>

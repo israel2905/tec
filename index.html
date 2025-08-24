@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TEC Games — Marketplace</title>
+  <meta name="description" content="Comprar e vender contas de jogos, gift cards, gold e itens digitais com segurança.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="header">
+  <div class="container header__inner">
+    <a href="index.html" class="brand"><img src="assets/logo-tec.svg" alt="TEC Games" width="160"></a>
+    <nav class="nav">
+      <a href="categorias.html">Categorias</a>
+      <a href="como-funciona.html">Como funciona</a>
+      <a href="blog.html">Blog</a>
+      <a class="btn" href="anunciar.html">Anunciar</a>
+      <a class="btn ghost" href="checkout.html">🛒 Carrinho</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <h1 id="heroTitle">Comprar e vender <span class="outline">contas, jogos, gift cards, gold</span> e mais</h1>
+        <p id="tagline">Games e streamings com o preço que cabe no seu bolso!</p>
+        <div class="cta">
+          <a class="btn" href="categorias.html">Ver categorias</a>
+          <a class="btn ghost" href="como-funciona.html">Como funciona</a>
+        </div>
+        <ul class="trust">
+          <li>🔒 Compra segura</li><li>🕑 Suporte 24h</li><li>🎁 Recompensas</li>
+        </ul>
+      </div>
+      <div class="hero__art" aria-hidden="true">
+        <div class="card ghost">
+          <h3>Em destaque</h3>
+          <div id="featured"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head"><h2>Categorias Populares</h2><a class="more" href="categorias.html">Ver todas</a></header>
+      <div class="grid cats" id="cats"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head"><h2>Mais populares</h2></header>
+      <div class="grid products" id="popular"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="section__head"><h2>Avaliações recentes</h2></header>
+      <div id="reviews" class="grid reviews"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div><strong id="storeName">TEC Games</strong> — © <span id="year"></span></div>
+    <nav class="foot-nav">
+      <a href="faq.html">FAQ</a><a href="tarifas.html">Tarifas</a><a href="pagamentos.html">Pagamentos</a>
+      <a href="termos.html">Termos</a><a href="privacidade.html">Privacidade</a><a href="reembolso.html">Reembolso</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="site.js"></script>
+</body>
+</html>

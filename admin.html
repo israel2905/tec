@@ -1,0 +1,57 @@
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — TEC Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="header"><div class="container header__inner">
+  <a href="index.html" class="brand"><img src="assets/logo-tec.svg" width="160"></a>
+  <nav class="nav"><a href="index.html">Início</a></nav>
+</div></header>
+<main class="section"><div class="container">
+  <h1>Configuração</h1>
+  <div class="card">
+    <label>Token admin (Authorization) <input id="token" placeholder="Cole o ADMIN_TOKEN"></label>
+  </div>
+  <h2 style="margin-top:16px">Marca & Pix</h2>
+  <div class="grid">
+    <label>Nome da loja <input id="storeName"></label>
+    <label>Slogan <input id="tagline"></label>
+  </div>
+  <div class="grid">
+    <label>Chave Pix <input id="pixKey"></label>
+    <label>Nome recebedor <input id="pixName"></label>
+    <label>Cidade (MAIÚSCULAS) <input id="pixCity"></label>
+  </div>
+  <button class="btn" id="save">Salvar</button>
+  <div id="status" class="muted" style="margin-top:10px"></div>
+
+  <h2 style="margin-top:24px">Importar produtos (CSV)</h2>
+  <p class="muted">Colunas: title,category,price,description,vendorName</p>
+  <textarea id="csv" rows="6" style="width:100%"></textarea>
+  <button class="btn" id="import">Importar CSV</button>
+  <div id="importStatus" class="muted" style="margin-top:10px"></div>
+</div></main>
+<script>
+async function load(){
+  const cfg = await (await fetch('/api/config')).json();
+  document.getElementById('storeName').value = cfg.storeName||'';
+  document.getElementById('tagline').value = cfg.tagline||'';
+  document.getElementById('pixKey').value = cfg.pixKey||'';
+  document.getElementById('pixName').value = cfg.pixName||'';
+  document.getElementById('pixCity').value = cfg.pixCity||'';
+}
+document.getElementById('save').onclick=async()=>{
+  const token=document.getElementById('token').value.trim();
+  const payload={ storeName:storeName.value, tagline:tagline.value, pixKey:pixKey.value, pixName:pixName.value, pixCity:pixCity.value };
+  const r=await fetch('/api/admin/save-config',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)});
+  const d=await r.json(); document.getElementById('status').textContent = d.ok?'Salvo!':'Erro: '+(d.error||'falha');
+};
+document.getElementById('import').onclick=async()=>{
+  const token=document.getElementById('token').value.trim();
+  const r=await fetch('/api/admin/import-listings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({csv:document.getElementById('csv').value})});
+  const d=await r.json(); document.getElementById('importStatus').textContent = d.ok?('Importados: '+d.count):('Erro: '+(d.error||'falha'));
+};
+document.addEventListener('DOMContentLoaded', load);
+</script>
+</body></html>

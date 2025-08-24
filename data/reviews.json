@@ -1,0 +1,17 @@
+[
+  {
+    "user": "Ana",
+    "rating": 5,
+    "comment": "Entrega rápida e suporte ótimo!"
+  },
+  {
+    "user": "Rafa",
+    "rating": 4.8,
+    "comment": "Código funcionou de primeira."
+  },
+  {
+    "user": "Gui",
+    "rating": 4.9,
+    "comment": "Compra segura, recomendo."
+  }
+]

@@ -1,0 +1,36 @@
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#fff;background:#000}
+:root{--line:#1f1f1f;--muted:#bfbfbf;--radius:14px;--ring:0 0 0 3px rgba(255,255,255,.14)}
+a{color:#fff;text-decoration:none}
+.container{width:min(1140px,92%);margin-inline:auto}
+.header{position:sticky;top:0;z-index:30;background:#000a;border-bottom:1px solid var(--line);backdrop-filter:saturate(150%) blur(8px)}
+.header__inner{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+.nav{display:flex;gap:14px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:.75rem 1rem;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#111,#0a0a0a)}
+.btn.ghost{background:transparent}
+.section{padding:64px 0;border-top:1px solid var(--line)}
+.section__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.grid{display:grid;gap:16px}
+.products{grid-template-columns:repeat(4,1fr)}
+.cats{grid-template-columns:repeat(6,1fr)}
+.card{background:linear-gradient(180deg,#0b0b0b,#090909);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.card .muted{color:var(--muted)}
+.hero{padding:64px 0;border-bottom:1px solid var(--line)}
+.hero__inner{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.outline{color:transparent;-webkit-text-stroke:1px #fff}
+.trust{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);padding:0;margin:10px 0;list-style:none}
+.reviews{grid-template-columns:repeat(3,1fr)}
+.blog{grid-template-columns:repeat(3,1fr)}
+.footer{padding:28px 0;border-top:1px solid var(--line)}
+.footer__inner{display:flex;align-items:start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot-nav{display:flex;flex-wrap:wrap;gap:10px}
+.badge{padding:.2rem .5rem;border:1px solid var(--line);border-radius:999px;font-size:.8rem;color:var(--muted)}
+.price{font-weight:800}
+input,textarea,select{background:#0a0a0a;border:1px solid var(--line);border-radius:10px;color:#fff;padding:.7rem .9rem;font:inherit}
+input:focus,textarea:focus,select:focus{outline:none;box-shadow:var(--ring)}
+.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:10px;text-align:left}
+@media (max-width: 980px){
+  .hero__inner{grid-template-columns:1fr}
+  .products{grid-template-columns:repeat(2,1fr)}
+  .cats{grid-template-columns:repeat(3,1fr)}
+  .reviews,.blog{grid-template-columns:1fr}
+}

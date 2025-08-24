@@ -1,0 +1,30 @@
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produto — TEC Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="header"><div class="container header__inner">
+  <a href="index.html" class="brand"><img src="assets/logo-tec.svg" width="160"></a>
+  <nav class="nav"><a href="categorias.html">Categorias</a><a href="checkout.html" class="btn ghost">🛒 Carrinho</a></nav>
+</div></header>
+<main class="section"><div class="container"><div id="prod"></div></div></main>
+<script>
+const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+async function load(){
+  const id=new URLSearchParams(location.search).get('id');
+  const r=await fetch('/api/listings/'+id); if(!r.ok){document.getElementById('prod').innerHTML='<p class="muted">Não encontrado</p>';return;} const it=await r.json();
+  document.title = it.title + ' — TEC Games';
+  document.getElementById('prod').innerHTML = `
+    <article class="card"><div class="badge">${it.category}</div>
+    <h1>${it.title}</h1><p class="muted">Vendedor: ${it.vendorName||'Vendedor'}</p>
+    <p>${it.description||''}</p><p class="price" style="font-size:1.6rem">${money(it.price)}</p>
+    <button class="btn" id="buy">Comprar</button></article>`;
+  document.getElementById('buy').addEventListener('click',()=>{
+    const cart=JSON.parse(localStorage.getItem('tec_cart')||'[]'); cart.push({id:it.id, title:it.title, price:it.price, qty:1});
+    localStorage.setItem('tec_cart', JSON.stringify(cart)); location.href='checkout.html';
+  });
+}
+document.addEventListener('DOMContentLoaded', load);
+</script>
+</body></html>

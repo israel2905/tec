@@ -1,0 +1,42 @@
+<!doctype html><html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anunciar — TEC Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="header"><div class="container header__inner">
+  <a href="index.html" class="brand"><img src="assets/logo-tec.svg" width="160"></a>
+  <nav class="nav"><a href="categorias.html">Categorias</a></nav>
+</div></header>
+<main class="section"><div class="container">
+  <h1>Crie seu anúncio</h1>
+  <div class="grid">
+    <button id="newVendor" class="btn">Gerar token vendedor</button>
+    <input id="vendorToken" placeholder="Cole aqui seu token para anunciar">
+  </div>
+  <h2 style="margin-top:16px">Novo anúncio</h2>
+  <div class="grid">
+    <label>Título <input id="title" placeholder="Ex.: Conta Valorant Imortal"></label>
+    <label>Categoria
+      <select id="category"><option>Contas</option><option>Gift Cards</option><option>Gold</option><option>Itens</option><option>Outros</option></select>
+    </label>
+    <label>Preço (BRL) <input id="price" type="number" min="0" step="0.01" value="50.00"></label>
+  </div>
+  <label>Descrição <textarea id="description" rows="5" placeholder="Detalhe o que está vendendo."></textarea></label>
+  <button class="btn" id="publish">Publicar</button>
+  <div id="status" class="muted" style="margin-top:10px"></div>
+</div></main>
+<script>
+document.getElementById('newVendor').onclick=async()=>{
+  const r=await fetch('/api/vendors',{method:'POST'}); const d=await r.json();
+  document.getElementById('vendorToken').value=d.token; localStorage.setItem('tec_vendor_token', d.token);
+};
+document.getElementById('publish').onclick=async()=>{
+  const token=document.getElementById('vendorToken').value.trim()||localStorage.getItem('tec_vendor_token');
+  if(!token) return alert('Informe o token de vendedor.');
+  const payload={ title:document.getElementById('title').value, category:document.getElementById('category').value, price:parseFloat(document.getElementById('price').value||'0'), description:document.getElementById('description').value };
+  const r=await fetch('/api/listings',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify(payload)}); const d=await r.json();
+  document.getElementById('status').textContent = d.error?('Erro: '+d.error):('Publicado! ID: '+d.id);
+};
+</script>
+</body></html>

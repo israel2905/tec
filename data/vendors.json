@@ -1,0 +1,12 @@
+[
+  {
+    "vendorId": "V1",
+    "name": "Loja Alpha",
+    "token": "tok_V1"
+  },
+  {
+    "vendorId": "V2",
+    "name": "PlayerX",
+    "token": "tok_V2"
+  }
+]
